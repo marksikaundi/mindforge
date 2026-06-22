@@ -27,6 +27,8 @@ export type GameState = {
   vibrationEnabled: boolean;
   darkMode: boolean;
   language: string;
+  displayName: string;
+  streakDays: number;
 };
 
 const DEFAULT_STATE: GameState = {
@@ -51,6 +53,8 @@ const DEFAULT_STATE: GameState = {
   vibrationEnabled: true,
   darkMode: false,
   language: 'English',
+  displayName: 'Alex',
+  streakDays: 4,
 };
 
 type GameContextValue = GameState & {

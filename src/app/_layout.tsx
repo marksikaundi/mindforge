@@ -14,8 +14,8 @@ export default function RootLayout() {
         <StatusBar style="auto" />
         <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
           <Stack.Screen name="index" />
-          <Stack.Screen name="splash" />
-          <Stack.Screen name="onboarding" />
+          <Stack.Screen name="splash" options={{ animation: 'fade' }} />
+          <Stack.Screen name="onboarding" options={{ animation: 'fade_from_bottom' }} />
           <Stack.Screen name="login" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="level-select" />

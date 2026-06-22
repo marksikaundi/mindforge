@@ -1,41 +1,78 @@
+import * as SplashScreen from 'expo-splash-screen';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated';
 
+import { BackgroundOrbs } from '@/components/game/background-orbs';
+import { SplashLoader } from '@/components/splash/splash-loader';
+import { SplashLogo } from '@/components/splash/splash-logo';
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
+import { useGame } from '@/context/game-context';
 import { useTheme } from '@/hooks/use-theme';
 
-export default function SplashScreen() {
+SplashScreen.preventAutoHideAsync().catch(() => {});
+
+export default function SplashScreenRoute() {
   const router = useRouter();
   const theme = useTheme();
-  const [loading, setLoading] = useState(true);
+  const { hasOnboarded, isLoggedIn } = useGame();
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
+    if (ready) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [ready]);
+
+  const navigateNext = useCallback(() => {
+    if (!hasOnboarded) {
       router.replace('/onboarding');
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, [router]);
+      return;
+    }
+    if (!isLoggedIn) {
+      router.replace('/login');
+      return;
+    }
+    router.replace('/(tabs)');
+  }, [hasOnboarded, isLoggedIn, router]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <View style={[styles.logoBox, { backgroundColor: theme.accent }]}>
-        <ThemedText style={styles.logoLetter}>T</ThemedText>
+      <BackgroundOrbs />
+
+      <View style={styles.content}>
+        <SplashLogo />
+
+        <Animated.View entering={FadeInDown.delay(300).duration(600)} style={styles.titleBlock}>
+          <ThemedText style={styles.title}>Think Smart</ThemedText>
+          <ThemedText themeColor="textSecondary" style={styles.subtitle}>
+            Challenge your mind · Train daily
+          </ThemedText>
+        </Animated.View>
+
+        <Animated.View entering={FadeInUp.delay(500).duration(600)} style={styles.tags}>
+          {['Puzzles', 'Logic', 'Analyze', 'Decisions'].map((tag, i) => (
+            <Animated.View
+              key={tag}
+              entering={FadeIn.delay(700 + i * 80).duration(400)}
+              style={[styles.tag, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}>
+              <ThemedText style={styles.tagText}>{tag}</ThemedText>
+            </Animated.View>
+          ))}
+        </Animated.View>
       </View>
 
-      <ThemedText style={styles.title}>Think Smart</ThemedText>
-      <ThemedText themeColor="textSecondary" style={styles.subtitle}>
-        Challenge your mind
-      </ThemedText>
-
-      <View style={styles.loadingRow}>
-        {loading && <ActivityIndicator color={theme.accent} />}
-        <ThemedText type="small" themeColor="textSecondary">
-          Loading…
-        </ThemedText>
-      </View>
+      <Animated.View entering={FadeIn.delay(900).duration(500)} style={styles.footer}>
+        <SplashLoader
+          durationMs={2800}
+          onComplete={() => {
+            setReady(true);
+            navigateNext();
+          }}
+        />
+      </Animated.View>
     </View>
   );
 }
@@ -43,36 +80,49 @@ export default function SplashScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  content: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: Spacing.three,
-    padding: Spacing.four,
+    paddingHorizontal: Spacing.four,
   },
-  logoBox: {
-    width: 88,
-    height: 88,
-    borderRadius: BorderRadius.xl,
+  titleBlock: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: Spacing.three,
-  },
-  logoLetter: {
-    fontSize: 42,
-    fontWeight: '800',
-    color: '#FFFFFF',
+    gap: Spacing.two,
+    marginTop: Spacing.four,
   },
   title: {
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: '800',
-    letterSpacing: -0.5,
+    letterSpacing: -0.8,
   },
   subtitle: {
     fontSize: 16,
+    textAlign: 'center',
+    lineHeight: 22,
   },
-  loadingRow: {
+  tags: {
     flexDirection: 'row',
-    alignItems: 'center',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
     gap: Spacing.two,
-    marginTop: Spacing.six,
+    marginTop: Spacing.five,
+    maxWidth: 320,
+  },
+  tag: {
+    paddingHorizontal: Spacing.two,
+    paddingVertical: Spacing.one,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  tagText: {
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 0.3,
+  },
+  footer: {
+    paddingHorizontal: Spacing.five,
+    paddingBottom: Spacing.six,
   },
 });
