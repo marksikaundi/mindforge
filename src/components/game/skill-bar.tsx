@@ -8,18 +8,20 @@ import { useTheme } from '@/hooks/use-theme';
 type SkillBarProps = {
   name: string;
   percent: number;
+  color?: string;
 };
 
-export function SkillBar({ name, percent }: SkillBarProps) {
+export function SkillBar({ name, percent, color }: SkillBarProps) {
   const theme = useTheme();
+  const barColor = color ?? theme.accent;
 
   return (
     <View style={styles.wrapper}>
       <View style={styles.header}>
         <ThemedText style={styles.name}>{name}</ThemedText>
-        <ThemedText style={[styles.percent, { color: theme.accent }]}>{percent}%</ThemedText>
+        <ThemedText style={[styles.percent, { color: barColor }]}>{percent}%</ThemedText>
       </View>
-      <ProgressBar progress={percent} height={8} color={theme.accent} />
+      <ProgressBar progress={percent} height={8} color={barColor} />
     </View>
   );
 }

@@ -101,7 +101,7 @@ export default function GameplayScreen() {
   };
 
   return (
-    <ScreenContainer>
+    <ScreenContainer ambient>
       <BackHeader
         title={levelId === 'daily' ? 'Daily Challenge' : `Level ${levelId}`}
         right={
@@ -129,7 +129,7 @@ export default function GameplayScreen() {
         <QuestionPanel visual={question.visual} />
       </Card>
 
-      <ThemedText type="smallBold" style={styles.chooseLabel}>
+      <ThemedText type="smallBold" style={[styles.chooseLabel, { color: theme.textSecondary }]}>
         Choose your answer
       </ThemedText>
 
@@ -184,7 +184,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
     textTransform: 'uppercase',
     marginBottom: Spacing.two,
-    color: '#64748B',
   },
   options: {
     flex: 1,

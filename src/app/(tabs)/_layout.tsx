@@ -1,7 +1,29 @@
 import { Tabs } from 'expo-router';
-import { Platform, Text } from 'react-native';
+import { SymbolView } from 'expo-symbols';
+import { Platform, StyleSheet, View } from 'react-native';
 
+import { BorderRadius } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+
+type TabIconProps = {
+  name: { ios: string; android: string; web: string };
+  focused: boolean;
+  color: string;
+};
+
+function TabIcon({ name, focused, color }: TabIconProps) {
+  const theme = useTheme();
+
+  return (
+    <View
+      style={[
+        styles.iconWrap,
+        focused && { backgroundColor: `${theme.accent}18` },
+      ]}>
+      <SymbolView name={name} size={22} tintColor={color} />
+    </View>
+  );
+}
 
 export default function TabLayout() {
   const theme = useTheme();
@@ -15,9 +37,10 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: theme.backgroundElement,
           borderTopColor: theme.border,
+          borderTopWidth: StyleSheet.hairlineWidth,
           height: Platform.OS === 'ios' ? 88 : 68,
           paddingBottom: Platform.OS === 'ios' ? 28 : 10,
-          paddingTop: 10,
+          paddingTop: 8,
         },
         tabBarLabelStyle: {
           fontSize: 11,
@@ -28,34 +51,64 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: () => <TabIcon emoji="🏠" />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon
+              name={{ ios: 'house.fill', android: 'home', web: 'home' }}
+              focused={focused}
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="progress"
         options={{
           title: 'Progress',
-          tabBarIcon: () => <TabIcon emoji="📊" />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon
+              name={{ ios: 'chart.bar.fill', android: 'bar_chart', web: 'bar_chart' }}
+              focused={focused}
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="leaderboard"
         options={{
           title: 'Ranks',
-          tabBarIcon: () => <TabIcon emoji="🏅" />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon
+              name={{ ios: 'trophy.fill', android: 'emoji_events', web: 'emoji_events' }}
+              focused={focused}
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="store"
         options={{
           title: 'Store',
-          tabBarIcon: () => <TabIcon emoji="🛒" />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabIcon
+              name={{ ios: 'bag.fill', android: 'shopping_bag', web: 'shopping_bag' }}
+              focused={focused}
+              color={color}
+            />
+          ),
         }}
       />
     </Tabs>
   );
 }
 
-function TabIcon({ emoji }: { emoji: string }) {
-  return <Text style={{ fontSize: 22 }}>{emoji}</Text>;
-}
+const styles = StyleSheet.create({
+  iconWrap: {
+    width: 36,
+    height: 28,
+    borderRadius: BorderRadius.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

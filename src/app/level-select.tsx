@@ -4,13 +4,15 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { BackHeader } from '@/components/game/back-header';
 import { CategoryBadge } from '@/components/game/category-badge';
+import { GradientSurface } from '@/components/game/gradient-surface';
 import { ScreenContainer } from '@/components/game/screen-container';
 import { SegmentedControl } from '@/components/game/segmented-control';
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, MODE_COLORS, Spacing } from '@/constants/theme';
+import { BorderRadius, MODE_COLORS, Shadow, Spacing } from '@/constants/theme';
 import { GAME_MODE_META } from '@/data/game-data';
 import { Difficulty, GameMode, useGame } from '@/context/game-context';
 import { QUESTIONS_PER_LEVEL } from '@/data/questions';
+import { shadeHex } from '@/lib/color';
 import { useTheme } from '@/hooks/use-theme';
 
 const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard'];
@@ -42,7 +44,7 @@ export default function LevelSelectScreen() {
   };
 
   return (
-    <ScreenContainer scroll>
+    <ScreenContainer scroll ambient>
       <BackHeader title={meta.label} />
 
       <View style={styles.header}>
@@ -59,7 +61,7 @@ export default function LevelSelectScreen() {
       />
 
       <ThemedText themeColor="textSecondary" style={styles.levelHint}>
-        {QUESTIONS_PER_LEVEL} questions per level
+        {QUESTIONS_PER_LEVEL} questions per level · earn up to 3 stars
       </ThemedText>
 
       <View style={styles.grid}>
@@ -70,6 +72,38 @@ export default function LevelSelectScreen() {
           const unlocked = isUnlocked(level);
           const completed = stars > 0;
 
+          const cellContent = (
+            <>
+              {unlocked ? (
+                <>
+                  <ThemedText
+                    style={[
+                      styles.levelNum,
+                      completed && { color: '#FFFFFF' },
+                    ]}>
+                    {level}
+                  </ThemedText>
+                  {completed ? (
+                    <ThemedText style={styles.stars}>
+                      {'★'.repeat(stars)}
+                      {'☆'.repeat(3 - stars)}
+                    </ThemedText>
+                  ) : (
+                    <ThemedText
+                      style={[
+                        styles.playLabel,
+                        completed && { color: 'rgba(255,255,255,0.85)' },
+                      ]}>
+                      Play
+                    </ThemedText>
+                  )}
+                </>
+              ) : (
+                <ThemedText style={styles.lock}>🔒</ThemedText>
+              )}
+            </>
+          );
+
           return (
             <Pressable
               key={level}
@@ -77,28 +111,22 @@ export default function LevelSelectScreen() {
               disabled={!unlocked}
               style={({ pressed }) => [
                 styles.levelCell,
+                !completed && Shadow.card as object,
                 {
-                  borderColor: completed ? modeColor : theme.border,
-                  backgroundColor: unlocked ? theme.backgroundElement : theme.background,
-                  opacity: !unlocked ? 0.45 : pressed ? 0.85 : 1,
+                  borderColor: completed ? 'transparent' : theme.border,
+                  backgroundColor: unlocked && !completed ? theme.backgroundElement : theme.background,
+                  opacity: !unlocked ? 0.4 : pressed ? 0.88 : 1,
                 },
-                completed && { borderWidth: 2 },
+                completed && { borderWidth: 0 },
               ]}>
-              {unlocked ? (
-                <>
-                  <ThemedText style={[styles.levelNum, completed && { color: modeColor }]}>
-                    {level}
-                  </ThemedText>
-                  {completed ? (
-                    <ThemedText style={styles.stars}>{'★'.repeat(stars)}{'☆'.repeat(3 - stars)}</ThemedText>
-                  ) : (
-                    <ThemedText themeColor="textSecondary" style={styles.playLabel}>
-                      Play
-                    </ThemedText>
-                  )}
-                </>
+              {completed ? (
+                <GradientSurface
+                  colors={[modeColor, shadeHex(modeColor, -30)]}
+                  style={styles.levelGradient}>
+                  {cellContent}
+                </GradientSurface>
               ) : (
-                <ThemedText style={styles.lock}>🔒</ThemedText>
+                cellContent
               )}
             </Pressable>
           );
@@ -120,7 +148,7 @@ const styles = StyleSheet.create({
   levelHint: {
     fontSize: 12,
     marginTop: Spacing.two,
-    marginBottom: Spacing.three,
+    marginBottom: Spacing.four,
     textAlign: 'center',
   },
   grid: {
@@ -136,6 +164,13 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.lg,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  levelGradient: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
     gap: Spacing.one,
   },
   levelNum: {
@@ -144,12 +179,13 @@ const styles = StyleSheet.create({
   },
   stars: {
     fontSize: 11,
-    color: '#F59E0B',
+    color: '#FDE68A',
     letterSpacing: 1,
   },
   playLabel: {
     fontSize: 12,
     fontWeight: '600',
+    color: '#64748B',
   },
   lock: {
     fontSize: 22,
