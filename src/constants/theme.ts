@@ -2,7 +2,7 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
-import { GameMode } from '@/context/game-context';
+import type { GameMode } from '@/context/game-context';
 
 export const Colors = {
   light: {
