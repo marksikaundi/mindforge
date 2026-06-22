@@ -21,7 +21,6 @@ export type GameState = {
   completedLevels: Record<string, number>;
   unlockedAchievements: string[];
   hasOnboarded: boolean;
-  isLoggedIn: boolean;
   soundEnabled: boolean;
   musicEnabled: boolean;
   vibrationEnabled: boolean;
@@ -47,7 +46,6 @@ const DEFAULT_STATE: GameState = {
   completedLevels: { 'puzzles-easy-1': 3 },
   unlockedAchievements: ['first-steps'],
   hasOnboarded: false,
-  isLoggedIn: false,
   soundEnabled: true,
   musicEnabled: true,
   vibrationEnabled: true,
@@ -59,8 +57,6 @@ const DEFAULT_STATE: GameState = {
 
 type GameContextValue = GameState & {
   completeOnboarding: () => void;
-  login: () => void;
-  logout: () => void;
   spendStars: (amount: number) => boolean;
   addStars: (amount: number) => void;
   useFlame: () => boolean;
@@ -83,14 +79,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const completeOnboarding = useCallback(() => {
     setState((s) => ({ ...s, hasOnboarded: true }));
-  }, []);
-
-  const login = useCallback(() => {
-    setState((s) => ({ ...s, isLoggedIn: true }));
-  }, []);
-
-  const logout = useCallback(() => {
-    setState((s) => ({ ...s, isLoggedIn: false }));
   }, []);
 
   const spendStars = useCallback((amount: number) => {
@@ -171,8 +159,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     () => ({
       ...state,
       completeOnboarding,
-      login,
-      logout,
       spendStars,
       addStars,
       useFlame,
@@ -186,8 +172,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     [
       state,
       completeOnboarding,
-      login,
-      logout,
       spendStars,
       addStars,
       useFlame,

@@ -16,7 +16,6 @@ export default function RootLayout() {
           <Stack.Screen name="index" />
           <Stack.Screen name="splash" options={{ animation: 'fade' }} />
           <Stack.Screen name="onboarding" options={{ animation: 'fade_from_bottom' }} />
-          <Stack.Screen name="login" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="level-select" />
           <Stack.Screen name="gameplay/[levelId]" />

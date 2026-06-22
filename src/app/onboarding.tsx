@@ -26,7 +26,7 @@ export default function OnboardingScreen() {
 
   const finish = () => {
     completeOnboarding();
-    router.replace('/login');
+    router.replace('/(tabs)');
   };
 
   const next = () => {

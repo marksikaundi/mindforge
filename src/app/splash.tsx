@@ -17,7 +17,7 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 export default function SplashScreenRoute() {
   const router = useRouter();
   const theme = useTheme();
-  const { hasOnboarded, isLoggedIn } = useGame();
+  const { hasOnboarded } = useGame();
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -31,12 +31,8 @@ export default function SplashScreenRoute() {
       router.replace('/onboarding');
       return;
     }
-    if (!isLoggedIn) {
-      router.replace('/login');
-      return;
-    }
     router.replace('/(tabs)');
-  }, [hasOnboarded, isLoggedIn, router]);
+  }, [hasOnboarded, router]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
