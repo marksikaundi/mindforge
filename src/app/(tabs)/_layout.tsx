@@ -5,22 +5,11 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { BorderRadius } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
-type TabIconProps = {
-  name: { ios: string; android: string; web: string };
-  focused: boolean;
-  color: string;
-};
-
-function TabIcon({ name, focused, color }: TabIconProps) {
+function TabIconWrap({ focused, children }: { focused: boolean; children: React.ReactNode }) {
   const theme = useTheme();
-
   return (
-    <View
-      style={[
-        styles.iconWrap,
-        focused && { backgroundColor: `${theme.accent}18` },
-      ]}>
-      <SymbolView name={name} size={22} tintColor={color} />
+    <View style={[styles.iconWrap, focused && { backgroundColor: `${theme.accent}18` }]}>
+      {children}
     </View>
   );
 }
@@ -52,11 +41,9 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ focused, color }) => (
-            <TabIcon
-              name={{ ios: 'house.fill', android: 'home', web: 'home' }}
-              focused={focused}
-              color={color}
-            />
+            <TabIconWrap focused={focused}>
+              <SymbolView name={{ ios: 'house.fill', android: 'home', web: 'home' }} size={22} tintColor={color} />
+            </TabIconWrap>
           ),
         }}
       />
@@ -65,11 +52,13 @@ export default function TabLayout() {
         options={{
           title: 'Progress',
           tabBarIcon: ({ focused, color }) => (
-            <TabIcon
-              name={{ ios: 'chart.bar.fill', android: 'bar_chart', web: 'bar_chart' }}
-              focused={focused}
-              color={color}
-            />
+            <TabIconWrap focused={focused}>
+              <SymbolView
+                name={{ ios: 'chart.bar.fill', android: 'bar_chart', web: 'bar_chart' }}
+                size={22}
+                tintColor={color}
+              />
+            </TabIconWrap>
           ),
         }}
       />
@@ -78,11 +67,13 @@ export default function TabLayout() {
         options={{
           title: 'Ranks',
           tabBarIcon: ({ focused, color }) => (
-            <TabIcon
-              name={{ ios: 'trophy.fill', android: 'emoji_events', web: 'emoji_events' }}
-              focused={focused}
-              color={color}
-            />
+            <TabIconWrap focused={focused}>
+              <SymbolView
+                name={{ ios: 'trophy.fill', android: 'emoji_events', web: 'emoji_events' }}
+                size={22}
+                tintColor={color}
+              />
+            </TabIconWrap>
           ),
         }}
       />
@@ -91,11 +82,13 @@ export default function TabLayout() {
         options={{
           title: 'Store',
           tabBarIcon: ({ focused, color }) => (
-            <TabIcon
-              name={{ ios: 'bag.fill', android: 'shopping_bag', web: 'shopping_bag' }}
-              focused={focused}
-              color={color}
-            />
+            <TabIconWrap focused={focused}>
+              <SymbolView
+                name={{ ios: 'bag.fill', android: 'shopping_bag', web: 'shopping_bag' }}
+                size={22}
+                tintColor={color}
+              />
+            </TabIconWrap>
           ),
         }}
       />

@@ -57,7 +57,7 @@ export default function LeaderboardScreen() {
                 </ThemedText>
                 <GradientSurface
                   colors={[color, hexAlpha(color, 0.6)]}
-                  style={[styles.podiumBar, { height }]}>
+                  style={{ ...styles.podiumBar, height }}>
                   <ThemedText style={styles.podiumRank}>#{place}</ThemedText>
                 </GradientSurface>
               </View>

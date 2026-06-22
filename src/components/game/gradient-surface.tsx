@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 type GradientSurfaceProps = {
   colors: [string, string];
   angle?: string;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   children?: ReactNode;
 };
 
