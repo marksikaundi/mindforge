@@ -8,11 +8,19 @@ import { BackgroundOrbs } from '@/components/game/background-orbs';
 import { SplashLoader } from '@/components/splash/splash-loader';
 import { SplashLogo } from '@/components/splash/splash-logo';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { BorderRadius, MODE_COLORS, Spacing, Typography } from '@/constants/theme';
 import { useGame } from '@/context/game-context';
+import { hexAlpha } from '@/lib/color';
 import { useTheme } from '@/hooks/use-theme';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
+
+const MODE_TAGS = [
+  { label: 'Puzzles', color: MODE_COLORS.puzzles },
+  { label: 'Logic', color: MODE_COLORS.logic },
+  { label: 'Analyze', color: MODE_COLORS.analyze },
+  { label: 'Decisions', color: MODE_COLORS.decisions },
+];
 
 export default function SplashScreenRoute() {
   const router = useRouter();
@@ -49,12 +57,19 @@ export default function SplashScreenRoute() {
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(500).duration(600)} style={styles.tags}>
-          {['Puzzles', 'Logic', 'Analyze', 'Decisions'].map((tag, i) => (
-            <Animated.View
-              key={tag}
-              entering={FadeIn.delay(700 + i * 80).duration(400)}
-              style={[styles.tag, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}>
-              <ThemedText style={styles.tagText}>{tag}</ThemedText>
+          {MODE_TAGS.map((tag, i) => (
+            <Animated.View key={tag.label} entering={FadeIn.delay(700 + i * 80).duration(400)}>
+              <View
+                style={[
+                  styles.tag,
+                  {
+                    backgroundColor: hexAlpha(tag.color, 0.12),
+                    borderColor: hexAlpha(tag.color, 0.25),
+                  },
+                ]}>
+                <View style={[styles.tagDot, { backgroundColor: tag.color }]} />
+                <ThemedText style={[styles.tagText, { color: tag.color }]}>{tag.label}</ThemedText>
+              </View>
             </Animated.View>
           ))}
         </Animated.View>
@@ -89,14 +104,11 @@ const styles = StyleSheet.create({
     marginTop: Spacing.four,
   },
   title: {
-    fontSize: 36,
-    fontWeight: '800',
-    letterSpacing: -0.8,
+    ...Typography.display,
   },
   subtitle: {
-    fontSize: 16,
+    ...Typography.bodySm,
     textAlign: 'center',
-    lineHeight: 22,
   },
   tags: {
     flexDirection: 'row',
@@ -107,15 +119,22 @@ const styles = StyleSheet.create({
     maxWidth: 320,
   },
   tag: {
-    paddingHorizontal: Spacing.two,
-    paddingVertical: Spacing.one,
-    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+    paddingHorizontal: Spacing.two + 2,
+    paddingVertical: Spacing.one + 2,
+    borderRadius: BorderRadius.full,
     borderWidth: 1,
   },
+  tagDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
   tagText: {
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 0.3,
+    ...Typography.caption,
+    fontWeight: '700',
   },
   footer: {
     paddingHorizontal: Spacing.five,

@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BackgroundOrbs } from '@/components/game/background-orbs';
 import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { hexAlpha } from '@/lib/color';
 import { useTheme } from '@/hooks/use-theme';
 
 type ScreenContainerProps = {
@@ -12,6 +13,7 @@ type ScreenContainerProps = {
   style?: ViewStyle;
   padded?: boolean;
   ambient?: boolean;
+  tabInset?: boolean;
 };
 
 export function ScreenContainer({
@@ -20,6 +22,7 @@ export function ScreenContainer({
   style,
   padded = true,
   ambient = false,
+  tabInset = false,
 }: ScreenContainerProps) {
   const theme = useTheme();
   const content = (
@@ -30,7 +33,9 @@ export function ScreenContainer({
     <>
       {ambient && <BackgroundOrbs />}
       {scroll ? (
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={[styles.scrollContent, tabInset && styles.tabScrollInset]}
+          showsVerticalScrollIndicator={false}>
           {content}
         </ScrollView>
       ) : (
@@ -46,7 +51,7 @@ export function ScreenContainer({
         style={[
           styles.topGlow,
           {
-            experimental_backgroundImage: `linear-gradient(180deg, ${theme.accent}14 0%, transparent 100%)`,
+            experimental_backgroundImage: `linear-gradient(180deg, ${hexAlpha(theme.accent, 0.1)} 0%, transparent 55%)`,
           } as ViewStyle,
         ]}
       />
@@ -64,10 +69,14 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 220,
+    height: 260,
   },
   scrollContent: {
     flexGrow: 1,
+    paddingBottom: Spacing.five,
+  },
+  tabScrollInset: {
+    paddingBottom: 100,
   },
   inner: {
     flex: 1,

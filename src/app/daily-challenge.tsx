@@ -1,11 +1,15 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { SymbolView } from 'expo-symbols';
 
+import { Card } from '@/components/game/card';
 import { GameButton } from '@/components/game/game-button';
+import { GradientSurface } from '@/components/game/gradient-surface';
 import { ScreenContainer } from '@/components/game/screen-container';
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, Spacing } from '@/constants/theme';
+import { BorderRadius, Spacing, Typography } from '@/constants/theme';
+import { shadeHex } from '@/lib/color';
 import { useTheme } from '@/hooks/use-theme';
 
 export default function DailyChallengeScreen() {
@@ -45,27 +49,34 @@ export default function DailyChallengeScreen() {
   };
 
   return (
-    <ScreenContainer>
+    <ScreenContainer ambient>
       <View style={styles.content}>
-        <ThemedText style={styles.emoji}>📅</ThemedText>
-        <ThemedText type="subtitle" style={styles.title}>
-          Daily Challenge
-        </ThemedText>
+        <GradientSurface
+          colors={[theme.accent, shadeHex(theme.accent, -35)]}
+          style={styles.iconCircle}>
+          <SymbolView
+            name={{ ios: 'calendar', android: 'calendar_today', web: 'calendar_today' }}
+            size={36}
+            tintColor="#FFFFFF"
+          />
+        </GradientSurface>
+
+        <ThemedText style={styles.title}>Daily challenge</ThemedText>
         <ThemedText themeColor="textSecondary" style={styles.desc}>
-          A new puzzle every day. Compete with players worldwide!
+          One new puzzle every day. Compete with players worldwide.
         </ThemedText>
 
-        <View style={[styles.timerBox, { borderColor: theme.border }]}>
-          <ThemedText type="small" themeColor="textSecondary">
+        <Card style={styles.timerCard}>
+          <ThemedText themeColor="textSecondary" style={styles.timerLabel}>
             Next challenge in
           </ThemedText>
           <ThemedText style={styles.timer}>
             {pad(countdown.hours)}:{pad(countdown.minutes)}:{pad(countdown.seconds)}
           </ThemedText>
-        </View>
+        </Card>
       </View>
 
-      <GameButton label="PLAY CHALLENGE" onPress={startChallenge} />
+      <GameButton label="Play challenge" onPress={startChallenge} size="lg" />
     </ScreenContainer>
   );
 }
@@ -78,29 +89,35 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
     paddingHorizontal: Spacing.two,
   },
-  emoji: {
-    fontSize: 56,
+  iconCircle: {
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: Spacing.two,
   },
   title: {
-    fontSize: 26,
+    ...Typography.h1,
     textAlign: 'center',
   },
   desc: {
+    ...Typography.bodySm,
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: Spacing.four,
+    maxWidth: 280,
   },
-  timerBox: {
-    alignItems: 'center',
-    padding: Spacing.four,
-    borderWidth: 1.5,
-    borderRadius: BorderRadius.lg,
-    gap: Spacing.two,
+  timerCard: {
     width: '100%',
+    alignItems: 'center',
+    gap: Spacing.two,
+  },
+  timerLabel: {
+    ...Typography.label,
   },
   timer: {
-    fontSize: 36,
-    fontWeight: '700',
+    ...Typography.display,
     fontVariant: ['tabular-nums'],
   },
 });

@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, Spacing } from '@/constants/theme';
+import { BorderRadius, Shadow, Spacing, Typography } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type SegmentedControlProps<T extends string> = {
@@ -20,7 +20,7 @@ export function SegmentedControl<T extends string>({
   const theme = useTheme();
 
   return (
-    <View style={[styles.track, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}>
+    <View style={[styles.track, { backgroundColor: theme.borderSubtle }]}>
       {options.map((option) => {
         const selected = option === value;
         return (
@@ -29,15 +29,17 @@ export function SegmentedControl<T extends string>({
             onPress={() => onChange(option)}
             style={[
               styles.segment,
-              selected && { backgroundColor: theme.accent },
+              selected && {
+                backgroundColor: theme.backgroundElement,
+                ...(Shadow.card as object),
+              },
             ]}>
             <ThemedText
-              type="smallBold"
               style={[
                 styles.label,
-                selected && { color: '#FFFFFF' },
+                { color: selected ? theme.text : theme.textSecondary },
               ]}>
-              {labels?.[option] ?? option.toUpperCase()}
+              {labels?.[option] ?? option.charAt(0).toUpperCase() + option.slice(1)}
             </ThemedText>
           </Pressable>
         );
@@ -49,19 +51,18 @@ export function SegmentedControl<T extends string>({
 const styles = StyleSheet.create({
   track: {
     flexDirection: 'row',
-    borderRadius: BorderRadius.md,
-    borderWidth: 1,
-    padding: 3,
-    gap: 2,
+    borderRadius: BorderRadius.full,
+    padding: 4,
+    gap: 4,
   },
   segment: {
     flex: 1,
     paddingVertical: Spacing.two,
-    borderRadius: BorderRadius.sm,
+    borderRadius: BorderRadius.full,
     alignItems: 'center',
   },
   label: {
-    fontSize: 12,
-    letterSpacing: 0.5,
+    ...Typography.caption,
+    fontWeight: '700',
   },
 });

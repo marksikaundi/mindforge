@@ -19,19 +19,31 @@ export function GameHeader({ showSettings = true }: GameHeaderProps) {
 
   return (
     <View style={styles.row}>
-      <UserAvatar name={displayName} level={level} size={46} />
+      <UserAvatar name={displayName} level={level} size={48} />
 
       <View style={styles.stats}>
-        <StatChip icon="⭐" value={stars.toLocaleString()} tint={theme.star} />
-        <StatChip icon="🔥" value={flames} tint={theme.flame} />
+        <StatChip
+          symbol={{ ios: 'star.fill', android: 'star', web: 'star' }}
+          value={stars.toLocaleString()}
+          tint={theme.star}
+        />
+        <StatChip
+          symbol={{ ios: 'flame.fill', android: 'local_fire_department', web: 'local_fire_department' }}
+          value={flames}
+          tint={theme.flame}
+        />
       </View>
 
       {showSettings && (
         <Pressable
           onPress={() => router.push('/settings')}
           hitSlop={12}
-          style={[styles.settingsBtn, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}>
-          <SymbolView name={{ ios: 'gearshape.fill', android: 'settings', web: 'settings' }} size={20} tintColor={theme.textSecondary} />
+          style={[styles.settingsBtn, { backgroundColor: theme.backgroundElement, borderColor: theme.borderSubtle }]}>
+          <SymbolView
+            name={{ ios: 'gearshape.fill', android: 'settings', web: 'settings' }}
+            size={20}
+            tintColor={theme.textSecondary}
+          />
         </Pressable>
       )}
     </View>
@@ -42,12 +54,13 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: Spacing.two,
+    paddingVertical: Spacing.three,
     gap: Spacing.two,
   },
   stats: {
     flex: 1,
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: Spacing.two,
   },
   settingsBtn: {

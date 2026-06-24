@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, Spacing } from '@/constants/theme';
+import { BorderRadius, Spacing, Typography } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type ProgressBarProps = {
@@ -20,17 +20,20 @@ export function ProgressBar({ progress, label, height = 8, color }: ProgressBarP
     <View style={styles.wrapper}>
       {label && (
         <View style={styles.labelRow}>
-          <ThemedText type="small" themeColor="textSecondary">
+          <ThemedText themeColor="textSecondary" style={styles.labelText}>
             Progress
           </ThemedText>
-          <ThemedText type="smallBold" themeColor="textSecondary">
+          <ThemedText themeColor="textSecondary" style={styles.labelText}>
             {label}
           </ThemedText>
         </View>
       )}
-      <View style={[styles.track, { backgroundColor: theme.border, height }]}>
+      <View style={[styles.track, { backgroundColor: theme.borderSubtle, height }]}>
         <View
-          style={[styles.fill, { backgroundColor: fillColor, width: `${clamped}%`, height }]}
+          style={[
+            styles.fill,
+            { backgroundColor: fillColor, width: `${clamped}%`, height, borderRadius: height / 2 },
+          ]}
         />
       </View>
     </View>
@@ -45,12 +48,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  labelText: {
+    ...Typography.caption,
+  },
   track: {
     borderRadius: BorderRadius.full,
     overflow: 'hidden',
     width: '100%',
   },
-  fill: {
-    borderRadius: BorderRadius.full,
-  },
+  fill: {},
 });

@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, Shadow, Spacing } from '@/constants/theme';
+import { BorderRadius, Shadow, Spacing, Typography } from '@/constants/theme';
 import { hexAlpha } from '@/lib/color';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -27,8 +27,8 @@ export function OptionButton({ index, label, selected, onPress, disabled }: Opti
         Shadow.card as object,
         {
           backgroundColor: selected ? theme.backgroundSelected : theme.backgroundElement,
-          borderColor: selected ? theme.accent : theme.border,
-          borderWidth: selected ? 2 : 1.5,
+          borderColor: selected ? theme.accent : theme.borderSubtle,
+          borderWidth: selected ? 2 : 1,
           opacity: disabled ? 0.55 : pressed ? 0.92 : 1,
           transform: [{ scale: pressed && !disabled ? 0.985 : 1 }],
         },
@@ -37,7 +37,7 @@ export function OptionButton({ index, label, selected, onPress, disabled }: Opti
         style={[
           styles.letter,
           {
-            backgroundColor: selected ? theme.accent : hexAlpha(theme.accent, 0.1),
+            backgroundColor: selected ? theme.accent : hexAlpha(theme.accent, 0.08),
           },
         ]}>
         <ThemedText
@@ -59,20 +59,19 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.lg,
   },
   letter: {
-    width: 36,
-    height: 36,
+    width: 38,
+    height: 38,
     borderRadius: BorderRadius.sm,
     alignItems: 'center',
     justifyContent: 'center',
   },
   letterText: {
-    fontSize: 14,
+    ...Typography.caption,
     fontWeight: '800',
   },
   label: {
     flex: 1,
-    fontSize: 15,
+    ...Typography.bodySm,
     lineHeight: 22,
-    fontWeight: '500',
   },
 });

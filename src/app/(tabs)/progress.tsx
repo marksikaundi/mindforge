@@ -9,7 +9,7 @@ import { SectionHeader } from '@/components/game/section-header';
 import { SkillBar } from '@/components/game/skill-bar';
 import { StatChip } from '@/components/game/stat-chip';
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, MODE_COLORS, Spacing } from '@/constants/theme';
+import { MODE_COLORS, Spacing, Typography } from '@/constants/theme';
 import { useGame } from '@/context/game-context';
 import { shadeHex } from '@/lib/color';
 import { useTheme } from '@/hooks/use-theme';
@@ -21,32 +21,40 @@ export default function ProgressScreen() {
   const levelsCompleted = Object.values(completedLevels).filter((s) => s > 0).length;
 
   return (
-    <ScreenContainer scroll ambient>
-      <ScreenHeader title="Your progress" subtitle="Track growth across all skill areas" />
+    <ScreenContainer scroll ambient tabInset>
+      <ScreenHeader title="Progress" subtitle="Your cognitive growth at a glance" />
 
       <Card accent={theme.accent} style={styles.levelCard}>
         <GradientSurface
           colors={[theme.accent, shadeHex(theme.accent, -35)]}
-          style={styles.levelCircle}>
-          <ThemedText style={styles.levelLabel}>LEVEL</ThemedText>
+          style={styles.levelRing}>
+          <ThemedText style={styles.levelLabel}>Level</ThemedText>
           <ThemedText style={styles.levelNumber}>{level}</ThemedText>
         </GradientSurface>
 
         <View style={styles.xpSection}>
           <ThemedText style={styles.xpTitle}>Experience</ThemedText>
-          <ProgressBar progress={xpPercent} color={theme.accent} height={8} />
+          <ProgressBar progress={xpPercent} color={theme.accent} height={10} />
           <ThemedText themeColor="textSecondary" style={styles.xpSub}>
-            {xp} / {xpToNextLevel} XP to level {level + 1}
+            {xp} / {xpToNextLevel} XP · next level {level + 1}
           </ThemedText>
         </View>
       </Card>
 
       <View style={styles.statsRow}>
-        <StatChip icon="🔥" value={`${streakDays} day streak`} tint={theme.flame} />
-        <StatChip icon="✅" value={`${levelsCompleted} levels`} tint={MODE_COLORS.decisions} />
+        <StatChip
+          symbol={{ ios: 'flame.fill', android: 'local_fire_department', web: 'local_fire_department' }}
+          value={`${streakDays} day streak`}
+          tint={theme.flame}
+        />
+        <StatChip
+          symbol={{ ios: 'checkmark.circle.fill', android: 'check_circle', web: 'check_circle' }}
+          value={`${levelsCompleted} levels`}
+          tint={MODE_COLORS.decisions}
+        />
       </View>
 
-      <SectionHeader title="Skill breakdown" subtitle="Based on your category performance" />
+      <SectionHeader title="Skill profile" subtitle="Performance across categories" />
 
       <View style={styles.skills}>
         <SkillBar name="Logic" percent={skills.logic} color={MODE_COLORS.logic} />
@@ -65,35 +73,34 @@ const styles = StyleSheet.create({
     gap: Spacing.four,
     marginBottom: Spacing.three,
   },
-  levelCircle: {
-    width: 92,
-    height: 92,
-    borderRadius: 46,
+  levelRing: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
     alignItems: 'center',
     justifyContent: 'center',
   },
   levelLabel: {
+    ...Typography.caption,
     color: 'rgba(255,255,255,0.8)',
-    fontSize: 10,
-    fontWeight: '800',
+    textTransform: 'uppercase',
     letterSpacing: 1.2,
   },
   levelNumber: {
+    ...Typography.h1,
     color: '#FFFFFF',
-    fontSize: 34,
-    fontWeight: '800',
-    lineHeight: 38,
+    lineHeight: 36,
   },
   xpSection: {
     flex: 1,
     gap: Spacing.two,
   },
   xpTitle: {
-    fontSize: 16,
+    ...Typography.bodySm,
     fontWeight: '700',
   },
   xpSub: {
-    fontSize: 13,
+    ...Typography.caption,
   },
   statsRow: {
     flexDirection: 'row',
@@ -103,6 +110,5 @@ const styles = StyleSheet.create({
   },
   skills: {
     gap: Spacing.four,
-    paddingBottom: Spacing.five,
   },
 });

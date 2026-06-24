@@ -1,10 +1,11 @@
 import { StyleSheet, View } from 'react-native';
 
 import { BackHeader } from '@/components/game/back-header';
+import { Card } from '@/components/game/card';
 import { ScreenContainer } from '@/components/game/screen-container';
 import { SettingsRow, ToggleRow } from '@/components/game/settings-row';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Spacing, Typography } from '@/constants/theme';
 import { useGame } from '@/context/game-context';
 
 export default function SettingsScreen() {
@@ -18,14 +19,14 @@ export default function SettingsScreen() {
   } = useGame();
 
   return (
-    <ScreenContainer scroll>
-      <BackHeader title="SETTINGS" />
+    <ScreenContainer scroll ambient>
+      <BackHeader title="Settings" />
 
-      <ThemedText type="smallBold" style={styles.section}>
-        PREFERENCES
+      <ThemedText themeColor="textSecondary" style={styles.section}>
+        Preferences
       </ThemedText>
 
-      <View style={styles.group}>
+      <Card style={styles.group}>
         <ToggleRow
           label="Sound"
           value={soundEnabled}
@@ -42,32 +43,33 @@ export default function SettingsScreen() {
           onValueChange={(v) => updateSettings({ vibrationEnabled: v })}
         />
         <ToggleRow
-          label="Dark Mode"
+          label="Dark mode"
           value={darkMode}
           onValueChange={(v) => updateSettings({ darkMode: v })}
         />
-      </View>
+      </Card>
 
-      <ThemedText type="smallBold" style={styles.section}>
-        GENERAL
+      <ThemedText themeColor="textSecondary" style={styles.section}>
+        General
       </ThemedText>
 
-      <View style={styles.group}>
+      <Card style={styles.group}>
         <SettingsRow label="Language" value={language} />
-        <SettingsRow label="Help & Support" />
-        <SettingsRow label="Privacy Policy" />
-      </View>
+        <SettingsRow label="Help & support" />
+        <SettingsRow label="Privacy policy" />
+      </Card>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
   section: {
-    letterSpacing: 1,
+    ...Typography.label,
     marginTop: Spacing.four,
     marginBottom: Spacing.two,
   },
   group: {
     marginBottom: Spacing.two,
+    paddingVertical: Spacing.one,
   },
 });

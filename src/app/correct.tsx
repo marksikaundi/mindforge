@@ -1,11 +1,14 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+import { SymbolView } from 'expo-symbols';
 
+import { GradientSurface } from '@/components/game/gradient-surface';
 import { GameButton } from '@/components/game/game-button';
 import { ModalOverlay } from '@/components/game/modal-overlay';
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, Spacing } from '@/constants/theme';
+import { BorderRadius, Spacing, Typography } from '@/constants/theme';
 import { useGame } from '@/context/game-context';
+import { shadeHex } from '@/lib/color';
 import { useTheme } from '@/hooks/use-theme';
 
 export default function CorrectModal() {
@@ -40,14 +43,20 @@ export default function CorrectModal() {
 
   return (
     <ModalOverlay>
-      <View style={[styles.iconCircle, { backgroundColor: theme.successBg }]}>
-        <ThemedText style={[styles.check, { color: theme.success }]}>✓</ThemedText>
-      </View>
+      <GradientSurface
+        colors={[theme.success, shadeHex(theme.success, -30)]}
+        style={styles.iconCircle}>
+        <SymbolView
+          name={{ ios: 'checkmark', android: 'check', web: 'check' }}
+          size={36}
+          tintColor="#FFFFFF"
+        />
+      </GradientSurface>
       <ThemedText style={styles.title}>Correct!</ThemedText>
       <ThemedText themeColor="textSecondary" style={styles.subtitle}>
-        Great thinking — keep it up.
+        Sharp thinking — keep the momentum going.
       </ThemedText>
-      <View style={styles.reward}>
+      <View style={[styles.reward, { backgroundColor: theme.accentSoft }]}>
         <ThemedText style={[styles.rewardText, { color: theme.star }]}>+20 ⭐</ThemedText>
       </View>
       <GameButton label="Continue" onPress={handleNext} style={styles.btn} />
@@ -57,30 +66,28 @@ export default function CorrectModal() {
 
 const styles = StyleSheet.create({
   iconCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  check: {
-    fontSize: 36,
-    fontWeight: '800',
-  },
   title: {
+    ...Typography.h1,
     fontSize: 26,
-    fontWeight: '700',
   },
   subtitle: {
-    fontSize: 14,
+    ...Typography.bodySm,
     textAlign: 'center',
   },
   reward: {
     paddingVertical: Spacing.two,
+    paddingHorizontal: Spacing.four,
+    borderRadius: BorderRadius.full,
   },
   rewardText: {
-    fontSize: 20,
-    fontWeight: '700',
+    ...Typography.h3,
+    fontWeight: '800',
   },
   btn: {
     alignSelf: 'stretch',

@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Spacing, Typography } from '@/constants/theme';
 
 type ScreenHeaderProps = {
   title: string;
@@ -28,12 +28,9 @@ const styles = StyleSheet.create({
     marginTop: Spacing.two,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '800',
-    letterSpacing: -0.6,
+    ...Typography.h1,
   },
   subtitle: {
-    fontSize: 15,
-    lineHeight: 21,
+    ...Typography.bodySm,
   },
 });

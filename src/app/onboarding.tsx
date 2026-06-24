@@ -6,10 +6,12 @@ import Animated, { FadeIn, FadeInRight } from 'react-native-reanimated';
 import { BackgroundOrbs } from '@/components/game/background-orbs';
 import { Card } from '@/components/game/card';
 import { GameButton } from '@/components/game/game-button';
+import { GradientSurface } from '@/components/game/gradient-surface';
 import { ThemedText } from '@/components/themed-text';
-import { MODE_COLORS, Spacing } from '@/constants/theme';
+import { BorderRadius, MODE_COLORS, Spacing, Typography } from '@/constants/theme';
 import { ONBOARDING_STEPS } from '@/data/game-data';
 import { useGame } from '@/context/game-context';
+import { hexAlpha, shadeHex } from '@/lib/color';
 import { useTheme } from '@/hooks/use-theme';
 
 const STEP_ACCENTS = [MODE_COLORS.puzzles, MODE_COLORS.logic, MODE_COLORS.decisions];
@@ -42,23 +44,22 @@ export default function OnboardingScreen() {
         <Animated.View entering={FadeIn.duration(400)} style={styles.topBar}>
           <ThemedText style={styles.brand}>Think Smart</ThemedText>
           <Pressable onPress={finish} hitSlop={12}>
-            <ThemedText themeColor="textSecondary" type="smallBold">
+            <ThemedText themeColor="textSecondary" style={styles.skip}>
               Skip
             </ThemedText>
           </Pressable>
         </Animated.View>
 
         <View style={styles.content}>
-          <Animated.View
-            key={step}
-            entering={FadeInRight.duration(380)}
-            style={styles.stepWrap}>
+          <Animated.View key={step} entering={FadeInRight.duration(380)} style={styles.stepWrap}>
             <Card accent={accent} style={styles.stepCard} padded={false}>
               <View style={styles.cardInner}>
-                <View style={[styles.emojiCircle, { backgroundColor: `${accent}18` }]}>
+                <GradientSurface
+                  colors={[hexAlpha(accent, 0.2), hexAlpha(accent, 0.05)]}
+                  style={styles.emojiCircle}>
                   <ThemedText style={styles.emoji}>{current.emoji}</ThemedText>
-                </View>
-                <ThemedText style={styles.stepLabel}>
+                </GradientSurface>
+                <ThemedText themeColor="textSecondary" style={styles.stepLabel}>
                   Step {step + 1} of {ONBOARDING_STEPS.length}
                 </ThemedText>
                 <ThemedText style={styles.title}>{current.title}</ThemedText>
@@ -78,8 +79,8 @@ export default function OnboardingScreen() {
                 style={[
                   styles.dot,
                   {
-                    backgroundColor: i === step ? accent : theme.border,
-                    width: i === step ? 28 : 8,
+                    backgroundColor: i === step ? accent : theme.borderSubtle,
+                    width: i === step ? 32 : 8,
                   },
                 ]}
               />
@@ -87,8 +88,9 @@ export default function OnboardingScreen() {
           </View>
 
           <GameButton
-            label={isLast ? 'Get Started' : 'Continue'}
+            label={isLast ? 'Get started' : 'Continue'}
             onPress={next}
+            size="lg"
             style={styles.nextBtn}
           />
         </View>
@@ -114,9 +116,12 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.two,
   },
   brand: {
-    fontSize: 18,
-    fontWeight: '800',
+    ...Typography.h3,
     letterSpacing: -0.3,
+  },
+  skip: {
+    ...Typography.bodySm,
+    fontWeight: '700',
   },
   content: {
     flex: 1,
@@ -132,11 +137,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.three,
     paddingVertical: Spacing.five,
+    paddingHorizontal: Spacing.four,
   },
   emojiCircle: {
-    width: 112,
-    height: 112,
-    borderRadius: 56,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -144,22 +150,15 @@ const styles = StyleSheet.create({
     fontSize: 52,
   },
   stepLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-    opacity: 0.7,
+    ...Typography.label,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '800',
+    ...Typography.h1,
     textAlign: 'center',
-    letterSpacing: -0.5,
   },
   description: {
-    fontSize: 16,
+    ...Typography.body,
     textAlign: 'center',
-    lineHeight: 24,
     maxWidth: 300,
   },
   footer: {
@@ -174,9 +173,9 @@ const styles = StyleSheet.create({
   },
   dot: {
     height: 8,
-    borderRadius: 4,
+    borderRadius: BorderRadius.full,
   },
   nextBtn: {
-    minHeight: 52,
+    width: '100%',
   },
 });

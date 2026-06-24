@@ -7,7 +7,7 @@ import { ScreenContainer } from '@/components/game/screen-container';
 import { ScreenHeader } from '@/components/game/screen-header';
 import { SegmentedControl } from '@/components/game/segmented-control';
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, Shadow, Spacing } from '@/constants/theme';
+import { BorderRadius, Shadow, Spacing, Typography } from '@/constants/theme';
 import { LEADERBOARD } from '@/data/game-data';
 import { hexAlpha } from '@/lib/color';
 import { useTheme } from '@/hooks/use-theme';
@@ -15,7 +15,7 @@ import { useTheme } from '@/hooks/use-theme';
 type Tab = 'global' | 'friends';
 
 const PODIUM_COLORS = ['#F59E0B', '#94A3B8', '#CD7F32'];
-const PODIUM_HEIGHTS = [72, 52, 40];
+const PODIUM_HEIGHTS = [80, 56, 44];
 
 export default function LeaderboardScreen() {
   const theme = useTheme();
@@ -26,8 +26,8 @@ export default function LeaderboardScreen() {
   const podiumOrder = [topThree[1], topThree[0], topThree[2]];
 
   return (
-    <ScreenContainer scroll ambient>
-      <ScreenHeader title="Leaderboard" subtitle="See how you rank this week" />
+    <ScreenContainer scroll ambient tabInset>
+      <ScreenHeader title="Leaderboard" subtitle="Weekly global rankings" />
 
       <SegmentedControl
         options={['global', 'friends'] as Tab[]}
@@ -52,11 +52,11 @@ export default function LeaderboardScreen() {
                 <ThemedText style={styles.podiumName} numberOfLines={1}>
                   {entry.name.split(' ')[0]}
                 </ThemedText>
-                <ThemedText type="smallBold" style={[styles.podiumScore, { color }]}>
+                <ThemedText style={[styles.podiumScore, { color }]}>
                   {entry.score.toLocaleString()}
                 </ThemedText>
                 <GradientSurface
-                  colors={[color, hexAlpha(color, 0.6)]}
+                  colors={[color, hexAlpha(color, 0.55)]}
                   style={{ ...styles.podiumBar, height }}>
                   <ThemedText style={styles.podiumRank}>#{place}</ThemedText>
                 </GradientSurface>
@@ -74,29 +74,23 @@ export default function LeaderboardScreen() {
               styles.row,
               Shadow.card as object,
               {
-                borderColor: entry.isUser ? theme.accent : theme.border,
-                backgroundColor: entry.isUser ? theme.backgroundSelected : theme.backgroundElement,
+                borderColor: entry.isUser ? theme.accent : theme.borderSubtle,
+                backgroundColor: entry.isUser ? theme.accentSoft : theme.backgroundElement,
                 opacity: pressed ? 0.92 : 1,
               },
               entry.isUser && { borderWidth: 2 },
             ]}>
-            <ThemedText type="smallBold" style={styles.rank}>
-              #{entry.rank}
-            </ThemedText>
-            <View style={[styles.rowAvatar, { backgroundColor: hexAlpha(theme.accent, 0.12) }]}>
+            <ThemedText style={styles.rank}>#{entry.rank}</ThemedText>
+            <View style={[styles.rowAvatar, { backgroundColor: hexAlpha(theme.accent, 0.1) }]}>
               <ThemedText style={styles.avatar}>{entry.avatar}</ThemedText>
             </View>
             <View style={styles.nameCol}>
               <ThemedText style={styles.name}>{entry.name}</ThemedText>
               {entry.isUser && (
-                <ThemedText type="small" style={{ color: theme.accent, fontWeight: '600' }}>
-                  Your rank
-                </ThemedText>
+                <ThemedText style={[styles.youBadge, { color: theme.accent }]}>Your rank</ThemedText>
               )}
             </View>
-            <ThemedText type="smallBold" style={styles.score}>
-              {entry.score.toLocaleString()}
-            </ThemedText>
+            <ThemedText style={styles.score}>{entry.score.toLocaleString()}</ThemedText>
           </Pressable>
         ))}
       </View>
@@ -109,14 +103,13 @@ const styles = StyleSheet.create({
     marginTop: Spacing.four,
     marginBottom: Spacing.four,
     paddingVertical: Spacing.four,
-    paddingHorizontal: Spacing.two,
   },
   podium: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'center',
     gap: Spacing.two,
-    minHeight: 160,
+    minHeight: 170,
   },
   podiumCol: {
     flex: 1,
@@ -133,16 +126,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   podiumAvatar: {
-    fontSize: 26,
+    fontSize: 24,
   },
   podiumName: {
-    fontSize: 13,
+    ...Typography.caption,
     fontWeight: '700',
     maxWidth: 80,
     textAlign: 'center',
   },
   podiumScore: {
-    fontSize: 12,
+    ...Typography.caption,
+    fontWeight: '800',
     marginBottom: Spacing.one,
   },
   podiumBar: {
@@ -150,29 +144,28 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: BorderRadius.sm,
     borderTopRightRadius: BorderRadius.sm,
     alignItems: 'center',
-    justifyContent: 'flex-start',
     paddingTop: Spacing.one,
   },
   podiumRank: {
     color: '#FFFFFF',
-    fontSize: 13,
+    ...Typography.caption,
     fontWeight: '800',
   },
   list: {
     gap: Spacing.two,
-    paddingBottom: Spacing.five,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: Spacing.three,
     borderWidth: 1,
-    borderRadius: BorderRadius.lg,
+    borderRadius: BorderRadius.xl,
     gap: Spacing.two,
   },
   rank: {
     width: 36,
-    fontSize: 14,
+    ...Typography.caption,
+    fontWeight: '800',
   },
   rowAvatar: {
     width: 40,
@@ -189,11 +182,16 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   name: {
+    ...Typography.bodySm,
     fontWeight: '700',
-    fontSize: 15,
+  },
+  youBadge: {
+    ...Typography.caption,
+    fontWeight: '700',
   },
   score: {
-    letterSpacing: 0.3,
-    fontSize: 14,
+    ...Typography.caption,
+    fontWeight: '800',
+    fontVariant: ['tabular-nums'],
   },
 });

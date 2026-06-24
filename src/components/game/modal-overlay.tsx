@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, Shadow, Spacing } from '@/constants/theme';
+import { BorderRadius, Shadow, Spacing, Typography } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type ModalOverlayProps = {
@@ -18,8 +18,11 @@ export function ModalOverlay({ children, onDismiss }: ModalOverlayProps) {
       <View
         style={[
           styles.card,
-          Shadow.card,
-          { backgroundColor: theme.backgroundElement, borderColor: theme.border },
+          Shadow.elevated as object,
+          {
+            backgroundColor: theme.backgroundElevated,
+            borderColor: theme.borderSubtle,
+          },
         ]}>
         {children}
       </View>
@@ -36,8 +39,8 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '100%',
-    maxWidth: 360,
-    borderRadius: BorderRadius.xl,
+    maxWidth: 340,
+    borderRadius: BorderRadius.xxl,
     borderWidth: 1,
     padding: Spacing.five,
     alignItems: 'center',

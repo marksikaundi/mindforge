@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { BackHeader } from '@/components/game/back-header';
+import { Card } from '@/components/game/card';
 import { ProgressBar } from '@/components/game/progress-bar';
 import { ScreenContainer } from '@/components/game/screen-container';
+import { SegmentedControl } from '@/components/game/segmented-control';
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, Spacing } from '@/constants/theme';
+import { Spacing, Typography } from '@/constants/theme';
 import { ACHIEVEMENTS } from '@/data/game-data';
 import { useGame } from '@/context/game-context';
 import { useTheme } from '@/hooks/use-theme';
@@ -25,23 +27,15 @@ export default function AchievementsScreen() {
   });
 
   return (
-    <ScreenContainer scroll>
-      <BackHeader title="ACHIEVEMENTS" />
+    <ScreenContainer scroll ambient>
+      <BackHeader title="Achievements" />
 
-      <View style={[styles.tabs, { borderColor: theme.border }]}>
-        {(['all', 'unlocked', 'locked'] as Filter[]).map((f) => (
-          <Pressable
-            key={f}
-            onPress={() => setFilter(f)}
-            style={[styles.tab, filter === f && { backgroundColor: theme.accent }]}>
-            <ThemedText
-              type="smallBold"
-              style={[styles.tabText, filter === f && { color: theme.background }]}>
-              {f.toUpperCase()}
-            </ThemedText>
-          </Pressable>
-        ))}
-      </View>
+      <SegmentedControl
+        options={['all', 'unlocked', 'locked'] as Filter[]}
+        value={filter}
+        onChange={setFilter}
+        labels={{ all: 'All', unlocked: 'Unlocked', locked: 'Locked' }}
+      />
 
       <View style={styles.list}>
         {filtered.map((achievement) => {
@@ -49,39 +43,38 @@ export default function AchievementsScreen() {
           const hasProgress = achievement.progress !== undefined && achievement.total !== undefined;
 
           return (
-            <View
+            <Card
               key={achievement.id}
-              style={[
-                styles.card,
-                {
-                  borderColor: theme.border,
-                  backgroundColor: unlocked ? theme.backgroundElement : theme.background,
-                  opacity: unlocked || filter !== 'locked' ? 1 : 0.6,
-                },
-              ]}>
+              accent={unlocked ? theme.success : undefined}
+              style={
+                !unlocked && filter === 'locked'
+                  ? { ...styles.card, opacity: 0.65 }
+                  : styles.card
+              }>
               <ThemedText style={styles.emoji}>{achievement.emoji}</ThemedText>
               <View style={styles.info}>
-                <ThemedText type="smallBold">{achievement.title}</ThemedText>
-                <ThemedText type="small" themeColor="textSecondary">
+                <ThemedText style={styles.cardTitle}>{achievement.title}</ThemedText>
+                <ThemedText themeColor="textSecondary" style={styles.cardDesc}>
                   {achievement.description}
                 </ThemedText>
                 {hasProgress && !unlocked && (
                   <View style={styles.progressWrap}>
                     <ProgressBar
                       progress={((achievement.progress ?? 0) / (achievement.total ?? 1)) * 100}
+                      color={theme.accent}
                     />
-                    <ThemedText type="small" themeColor="textSecondary">
+                    <ThemedText themeColor="textSecondary" style={styles.progressText}>
                       {achievement.progress}/{achievement.total}
                     </ThemedText>
                   </View>
                 )}
                 {unlocked && (
-                  <ThemedText type="small" style={styles.unlocked}>
+                  <ThemedText style={[styles.unlocked, { color: theme.success }]}>
                     ✓ Completed
                   </ThemedText>
                 )}
               </View>
-            </View>
+            </Card>
           );
         })}
       </View>
@@ -90,30 +83,13 @@ export default function AchievementsScreen() {
 }
 
 const styles = StyleSheet.create({
-  tabs: {
-    flexDirection: 'row',
-    borderWidth: 1.5,
-    borderRadius: BorderRadius.md,
-    overflow: 'hidden',
-    marginBottom: Spacing.four,
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: Spacing.two,
-    alignItems: 'center',
-  },
-  tabText: {
-    fontSize: 11,
-  },
   list: {
     gap: Spacing.two,
+    marginTop: Spacing.four,
     paddingBottom: Spacing.five,
   },
   card: {
     flexDirection: 'row',
-    padding: Spacing.three,
-    borderWidth: 1,
-    borderRadius: BorderRadius.md,
     gap: Spacing.three,
     alignItems: 'flex-start',
   },
@@ -124,13 +100,24 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: Spacing.one,
   },
+  cardTitle: {
+    ...Typography.bodySm,
+    fontWeight: '700',
+  },
+  cardDesc: {
+    ...Typography.caption,
+    lineHeight: 18,
+  },
   progressWrap: {
     marginTop: Spacing.one,
     gap: Spacing.one,
   },
+  progressText: {
+    ...Typography.caption,
+  },
   unlocked: {
-    color: '#2E7D32',
-    fontWeight: '600',
+    ...Typography.caption,
+    fontWeight: '700',
     marginTop: Spacing.one,
   },
 });

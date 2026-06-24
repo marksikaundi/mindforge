@@ -1,15 +1,17 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+import { SymbolView } from 'expo-symbols';
 
 import { Card } from '@/components/game/card';
 import { GameButton } from '@/components/game/game-button';
 import { GameHeader } from '@/components/game/game-header';
 import { GradientSurface } from '@/components/game/gradient-surface';
+import { ModeIcon } from '@/components/game/mode-icon';
 import { ScreenContainer } from '@/components/game/screen-container';
 import { SectionHeader } from '@/components/game/section-header';
 import { StatChip } from '@/components/game/stat-chip';
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, MODE_COLORS, Spacing } from '@/constants/theme';
+import { BorderRadius, MODE_COLORS, Spacing, Typography } from '@/constants/theme';
 import { GAME_MODES } from '@/data/game-data';
 import { GameMode, useGame } from '@/context/game-context';
 import { hexAlpha, shadeHex } from '@/lib/color';
@@ -29,61 +31,72 @@ export default function HomeScreen() {
     hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
   return (
-    <ScreenContainer scroll ambient>
+    <ScreenContainer scroll ambient tabInset>
       <GameHeader />
 
-      <View style={styles.greetingBlock}>
+      <View style={styles.heroSection}>
         <ThemedText themeColor="textSecondary" style={styles.greetingLabel}>
           {greeting}, {displayName}
         </ThemedText>
-        <ThemedText style={styles.greetingTitle}>Ready to train your mind?</ThemedText>
+        <ThemedText style={styles.greetingTitle}>Train your mind today</ThemedText>
         <View style={styles.quickStats}>
-          <StatChip icon="📈" value={`Lv ${level}`} tint={theme.accent} />
-          <StatChip icon="🔥" value={`${streakDays}d streak`} tint={theme.flame} />
-          <StatChip icon="✨" value={`${xp}/${xpToNextLevel} XP`} tint={theme.star} />
+          <StatChip
+            symbol={{ ios: 'chart.line.uptrend.xyaxis', android: 'trending_up', web: 'trending_up' }}
+            value={`Lv ${level}`}
+            tint={theme.accent}
+          />
+          <StatChip
+            symbol={{ ios: 'flame.fill', android: 'local_fire_department', web: 'local_fire_department' }}
+            value={`${streakDays}d`}
+            tint={theme.flame}
+          />
+          <StatChip
+            symbol={{ ios: 'sparkles', android: 'auto_awesome', web: 'auto_awesome' }}
+            value={`${xp}/${xpToNextLevel}`}
+            tint={theme.star}
+          />
         </View>
       </View>
 
-      <Card variant="hero" accent={MODE_COLORS.puzzles} style={styles.dailyCard}>
-        <View style={styles.dailyTop}>
+      <GradientSurface
+        colors={[theme.accent, shadeHex(theme.accent, -40)]}
+        style={styles.dailyHero}>
+        <View style={styles.dailyGlow} />
+        <View style={styles.dailyContent}>
           <View style={styles.dailyText}>
-            <ThemedText style={styles.dailyBadge}>TODAY</ThemedText>
-            <ThemedText style={styles.dailyLabel}>Daily Challenge</ThemedText>
+            <ThemedText style={styles.dailyBadge}>Daily challenge</ThemedText>
+            <ThemedText style={styles.dailyTitle}>One puzzle. Global ranks.</ThemedText>
             <ThemedText style={styles.dailyDesc}>
-              One curated puzzle · compete with players worldwide
+              Curated by our team · refreshed every 24 hours
             </ThemedText>
           </View>
-          <View style={styles.dailyIconWrap}>
-            <ThemedText style={styles.dailyEmoji}>🧠</ThemedText>
+          <View style={styles.dailyIcon}>
+            <SymbolView
+              name={{ ios: 'brain.head.profile', android: 'psychology', web: 'psychology' }}
+              size={32}
+              tintColor="#FFFFFF"
+            />
           </View>
         </View>
         <GameButton
-          label="Play Challenge"
+          label="Play now"
           light
           variant="secondary"
           onPress={() => router.push('/daily-challenge')}
           style={styles.dailyBtn}
         />
-      </Card>
+      </GradientSurface>
 
-      <SectionHeader title="Training modes" subtitle="Build skills across four core areas" />
+      <SectionHeader title="Training modes" subtitle="Four core skills to master" />
 
       <View style={styles.modeGrid}>
         {GAME_MODES.map((mode) => {
           const color = MODE_COLORS[mode.id];
           return (
-            <Card
-              key={mode.id}
-              accent={color}
-              onPress={() => openMode(mode.id)}
-              style={styles.modeCard}>
-              <GradientSurface
-                colors={[hexAlpha(color, 0.2), hexAlpha(color, 0.05)]}
-                style={styles.modeIconBg}>
-                <ThemedText style={styles.modeEmoji}>{mode.emoji}</ThemedText>
-              </GradientSurface>
+            <Card key={mode.id} accent={color} onPress={() => openMode(mode.id)} style={styles.modeCard}>
+              <ModeIcon mode={mode.id} color={color} />
               <ThemedText style={styles.modeLabel}>{mode.label}</ThemedText>
-              <ThemedText themeColor="textSecondary" style={styles.modeDesc}>
+              <ThemedText themeColor="textSecondary" style={styles.modeDesc} numberOfLines={2}>
                 {mode.description}
               </ThemedText>
             </Card>
@@ -96,17 +109,23 @@ export default function HomeScreen() {
           <GradientSurface
             colors={[MODE_COLORS.decisions, shadeHex(MODE_COLORS.decisions, -30)]}
             style={styles.achIcon}>
-            <ThemedText style={styles.achEmoji}>🏆</ThemedText>
+            <SymbolView
+              name={{ ios: 'trophy.fill', android: 'emoji_events', web: 'emoji_events' }}
+              size={22}
+              tintColor="#FFFFFF"
+            />
           </GradientSurface>
           <View style={styles.achText}>
             <ThemedText style={styles.achTitle}>Achievements</ThemedText>
             <ThemedText themeColor="textSecondary" style={styles.achSub}>
-              Track milestones and unlock rewards
+              Milestones, badges, and rewards
             </ThemedText>
           </View>
-          <ThemedText themeColor="textSecondary" style={styles.chevron}>
-            ›
-          </ThemedText>
+          <SymbolView
+            name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }}
+            size={18}
+            tintColor={theme.textSecondary}
+          />
         </View>
       </Card>
     </ScreenContainer>
@@ -114,18 +133,16 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  greetingBlock: {
+  heroSection: {
     marginBottom: Spacing.four,
     gap: Spacing.one,
   },
   greetingLabel: {
-    fontSize: 14,
+    ...Typography.bodySm,
     fontWeight: '600',
   },
   greetingTitle: {
-    fontSize: 24,
-    fontWeight: '800',
-    letterSpacing: -0.5,
+    ...Typography.h1,
     marginBottom: Spacing.two,
   },
   quickStats: {
@@ -133,50 +150,53 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: Spacing.two,
   },
-  dailyCard: {
+  dailyHero: {
+    borderRadius: BorderRadius.xxl,
+    padding: Spacing.four,
     marginBottom: Spacing.five,
+    overflow: 'hidden',
+    gap: Spacing.four,
   },
-  dailyTop: {
+  dailyGlow: {
+    position: 'absolute',
+    top: -40,
+    right: -40,
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+  },
+  dailyContent: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: Spacing.four,
+    gap: Spacing.three,
   },
   dailyText: {
     flex: 1,
-    paddingRight: Spacing.two,
+    gap: Spacing.one,
   },
   dailyBadge: {
+    ...Typography.label,
     color: 'rgba(255,255,255,0.75)',
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 1.2,
-    marginBottom: Spacing.one,
   },
-  dailyLabel: {
+  dailyTitle: {
+    ...Typography.h2,
     color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: '800',
-    marginBottom: Spacing.one,
   },
   dailyDesc: {
-    color: 'rgba(255,255,255,0.85)',
-    fontSize: 14,
-    lineHeight: 20,
+    ...Typography.bodySm,
+    color: 'rgba(255,255,255,0.82)',
   },
-  dailyIconWrap: {
+  dailyIcon: {
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: hexAlpha('#FFFFFF', 0.18),
     alignItems: 'center',
     justifyContent: 'center',
   },
-  dailyEmoji: {
-    fontSize: 28,
-  },
   dailyBtn: {
-    minHeight: 48,
+    alignSelf: 'stretch',
   },
   modeGrid: {
     flexDirection: 'row',
@@ -187,31 +207,20 @@ const styles = StyleSheet.create({
   modeCard: {
     width: '47%',
     gap: Spacing.two,
-    minHeight: 148,
-  },
-  modeIconBg: {
-    width: 48,
-    height: 48,
-    borderRadius: BorderRadius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modeEmoji: {
-    fontSize: 24,
+    minHeight: 140,
   },
   modeLabel: {
-    fontSize: 15,
+    ...Typography.bodySm,
     fontWeight: '800',
   },
   modeDesc: {
-    fontSize: 12,
+    ...Typography.caption,
     lineHeight: 17,
   },
   achRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.three,
-    marginBottom: Spacing.two,
   },
   achIcon: {
     width: 48,
@@ -220,23 +229,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  achEmoji: {
-    fontSize: 24,
-  },
   achText: {
     flex: 1,
     gap: 2,
   },
   achTitle: {
-    fontSize: 16,
+    ...Typography.bodySm,
     fontWeight: '700',
   },
   achSub: {
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  chevron: {
-    fontSize: 28,
-    fontWeight: '300',
+    ...Typography.caption,
   },
 });

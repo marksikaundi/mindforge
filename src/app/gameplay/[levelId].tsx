@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { SymbolView } from 'expo-symbols';
 
 import { BackHeader } from '@/components/game/back-header';
 import { Card } from '@/components/game/card';
@@ -11,7 +12,7 @@ import { ProgressBar } from '@/components/game/progress-bar';
 import { QuestionPanel } from '@/components/game/question-panel';
 import { ScreenContainer } from '@/components/game/screen-container';
 import { ThemedText } from '@/components/themed-text';
-import { MODE_COLORS, Spacing } from '@/constants/theme';
+import { MODE_COLORS, Spacing, Typography } from '@/constants/theme';
 import { Difficulty, GameMode, useGame } from '@/context/game-context';
 import { getQuestionByIndex, QUESTIONS_PER_LEVEL } from '@/data/questions';
 import { useTheme } from '@/hooks/use-theme';
@@ -107,9 +108,12 @@ export default function GameplayScreen() {
         right={
           <View style={styles.lives}>
             {Array.from({ length: 3 }, (_, i) => (
-              <ThemedText key={i} style={{ opacity: i < lives ? 1 : 0.25, fontSize: 16 }}>
-                ❤️
-              </ThemedText>
+              <SymbolView
+                key={i}
+                name={{ ios: 'heart.fill', android: 'favorite', web: 'favorite' }}
+                size={16}
+                tintColor={i < lives ? theme.error : theme.borderSubtle}
+              />
             ))}
           </View>
         }
@@ -117,20 +121,20 @@ export default function GameplayScreen() {
 
       <View style={styles.meta}>
         <CategoryBadge mode={gameMode} size="sm" />
-        <ThemedText type="small" themeColor="textSecondary" style={styles.difficulty}>
-          {diff.toUpperCase()} · Q{questionNum}/{QUESTIONS_PER_LEVEL}
+        <ThemedText themeColor="textSecondary" style={styles.difficulty}>
+          {diff} · Q{questionNum}/{QUESTIONS_PER_LEVEL}
         </ThemedText>
       </View>
 
-      <ProgressBar progress={progress} height={6} />
+      <ProgressBar progress={progress} height={8} color={modeColor} />
 
-      <Card style={styles.questionCard} accent={modeColor}>
+      <Card style={styles.questionCard} accent={modeColor} variant="glass">
         <ThemedText style={styles.prompt}>{question.prompt}</ThemedText>
         <QuestionPanel visual={question.visual} />
       </Card>
 
-      <ThemedText type="smallBold" style={[styles.chooseLabel, { color: theme.textSecondary }]}>
-        Choose your answer
+      <ThemedText themeColor="textSecondary" style={styles.chooseLabel}>
+        Select your answer
       </ThemedText>
 
       <View style={styles.options}>
@@ -157,17 +161,18 @@ export default function GameplayScreen() {
 const styles = StyleSheet.create({
   lives: {
     flexDirection: 'row',
-    gap: 2,
+    gap: 4,
   },
   meta: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: Spacing.two,
+    marginTop: Spacing.one,
   },
   difficulty: {
-    fontSize: 12,
-    letterSpacing: 0.5,
+    ...Typography.caption,
+    textTransform: 'capitalize',
   },
   questionCard: {
     marginTop: Spacing.three,
@@ -175,14 +180,12 @@ const styles = StyleSheet.create({
     gap: Spacing.four,
   },
   prompt: {
-    fontSize: 17,
+    ...Typography.body,
     fontWeight: '600',
     lineHeight: 26,
   },
   chooseLabel: {
-    fontSize: 12,
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
+    ...Typography.label,
     marginBottom: Spacing.two,
   },
   options: {
@@ -197,6 +200,5 @@ const styles = StyleSheet.create({
   footerBtn: {
     flex: 1,
     minHeight: 46,
-    paddingVertical: Spacing.two,
   },
 });

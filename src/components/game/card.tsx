@@ -3,9 +3,10 @@ import { ReactNode } from 'react';
 
 import { GradientOverlay } from '@/components/game/gradient-surface';
 import { BorderRadius, Shadow, Spacing } from '@/constants/theme';
+import { hexAlpha } from '@/lib/color';
 import { useTheme } from '@/hooks/use-theme';
 
-type CardVariant = 'default' | 'hero' | 'flat';
+type CardVariant = 'default' | 'hero' | 'flat' | 'glass';
 
 type CardProps = {
   children: ReactNode;
@@ -27,12 +28,14 @@ export function Card({
   const theme = useTheme();
   const accentColor = accent ?? theme.accent;
   const isHero = variant === 'hero';
+  const isGlass = variant === 'glass';
+  const isFlat = variant === 'flat';
 
   const content = (
     <>
-      {!isHero && accent && <GradientOverlay color={accentColor} />}
-      {!isHero && accent && (
-        <View style={[styles.accentDot, { backgroundColor: accentColor }]} />
+      {!isHero && accent && !isFlat && <GradientOverlay color={accentColor} />}
+      {!isHero && accent && !isFlat && (
+        <View style={[styles.accentBar, { backgroundColor: accentColor }]} />
       )}
       <View style={[padded && styles.padded, isHero && styles.heroContent]}>{children}</View>
     </>
@@ -40,11 +43,17 @@ export function Card({
 
   const cardStyle = [
     styles.card,
-    variant !== 'flat' && Shadow.card,
+    !isFlat && Shadow.card,
+    isHero && (Shadow.elevated as object),
     isHero && styles.hero,
+    isGlass && { backgroundColor: hexAlpha(theme.backgroundElement, 0.85) },
     {
-      backgroundColor: isHero ? accentColor : theme.backgroundElement,
-      borderColor: isHero ? 'transparent' : theme.border,
+      backgroundColor: isHero
+        ? accentColor
+        : isGlass
+          ? hexAlpha(theme.backgroundElement, 0.85)
+          : theme.backgroundElement,
+      borderColor: isHero ? 'transparent' : theme.borderSubtle,
     },
     style,
   ];
@@ -65,29 +74,25 @@ export function Card({
 const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
-    borderRadius: BorderRadius.lg,
+    borderRadius: BorderRadius.xl,
     overflow: 'hidden',
     position: 'relative',
   },
   pressed: {
-    opacity: 0.92,
+    opacity: 0.94,
     transform: [{ scale: 0.985 }],
   },
   hero: {
     borderWidth: 0,
-    shadowColor: '#312E81',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.28,
-    shadowRadius: 18,
-    elevation: 8,
   },
-  accentDot: {
+  accentBar: {
     position: 'absolute',
     top: Spacing.three,
-    left: Spacing.three,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    bottom: Spacing.three,
+    left: 0,
+    width: 4,
+    borderTopRightRadius: 4,
+    borderBottomRightRadius: 4,
   },
   padded: {
     padding: Spacing.four,

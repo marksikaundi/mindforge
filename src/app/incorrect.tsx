@@ -1,11 +1,14 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+import { SymbolView } from 'expo-symbols';
 
+import { GradientSurface } from '@/components/game/gradient-surface';
 import { GameButton } from '@/components/game/game-button';
 import { ModalOverlay } from '@/components/game/modal-overlay';
 import { ThemedText } from '@/components/themed-text';
-import { BorderRadius, Spacing } from '@/constants/theme';
+import { Spacing, Typography } from '@/constants/theme';
 import { useGame } from '@/context/game-context';
+import { shadeHex } from '@/lib/color';
 import { useTheme } from '@/hooks/use-theme';
 
 export default function IncorrectModal() {
@@ -34,39 +37,40 @@ export default function IncorrectModal() {
 
   return (
     <ModalOverlay>
-      <View style={[styles.iconCircle, { backgroundColor: theme.errorBg }]}>
-        <ThemedText style={[styles.x, { color: theme.error }]}>✕</ThemedText>
-      </View>
+      <GradientSurface
+        colors={[theme.error, shadeHex(theme.error, -30)]}
+        style={styles.iconCircle}>
+        <SymbolView
+          name={{ ios: 'xmark', android: 'close', web: 'close' }}
+          size={32}
+          tintColor="#FFFFFF"
+        />
+      </GradientSurface>
       <ThemedText style={styles.title}>Not quite</ThemedText>
       <ThemedText themeColor="textSecondary" style={styles.desc}>
         Review the clues and try again, or view the solution.
       </ThemedText>
-      <GameButton label="Try Again" onPress={tryAgain} style={styles.btn} />
-      <GameButton label="View Solution" variant="outline" onPress={viewSolution} style={styles.btn} />
+      <GameButton label="Try again" onPress={tryAgain} style={styles.btn} />
+      <GameButton label="View solution" variant="outline" onPress={viewSolution} style={styles.btn} />
     </ModalOverlay>
   );
 }
 
 const styles = StyleSheet.create({
   iconCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  x: {
-    fontSize: 32,
-    fontWeight: '800',
-  },
   title: {
+    ...Typography.h1,
     fontSize: 26,
-    fontWeight: '700',
   },
   desc: {
+    ...Typography.bodySm,
     textAlign: 'center',
-    fontSize: 14,
-    lineHeight: 20,
   },
   btn: {
     alignSelf: 'stretch',

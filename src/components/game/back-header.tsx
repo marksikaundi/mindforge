@@ -1,8 +1,10 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { SymbolView } from 'expo-symbols';
 
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { BorderRadius, Spacing, Typography } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 
 type BackHeaderProps = {
   title: string;
@@ -11,15 +13,21 @@ type BackHeaderProps = {
 
 export function BackHeader({ title, right }: BackHeaderProps) {
   const router = useRouter();
+  const theme = useTheme();
 
   return (
     <View style={styles.row}>
-      <Pressable onPress={() => router.back()} hitSlop={12} style={styles.back}>
-        <ThemedText style={styles.arrow}>←</ThemedText>
+      <Pressable
+        onPress={() => router.back()}
+        hitSlop={12}
+        style={[styles.backBtn, { backgroundColor: theme.backgroundElement, borderColor: theme.borderSubtle }]}>
+        <SymbolView
+          name={{ ios: 'chevron.left', android: 'arrow_back', web: 'arrow_back' }}
+          size={18}
+          tintColor={theme.text}
+        />
       </Pressable>
-      <ThemedText type="smallBold" style={styles.title}>
-        {title}
-      </ThemedText>
+      <ThemedText style={styles.title}>{title}</ThemedText>
       <View style={styles.right}>{right}</View>
     </View>
   );
@@ -30,21 +38,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: Spacing.two,
-    minHeight: 44,
+    minHeight: 48,
+    gap: Spacing.two,
   },
-  back: {
+  backBtn: {
     width: 40,
-  },
-  arrow: {
-    fontSize: 24,
-    fontWeight: '600',
+    height: 40,
+    borderRadius: BorderRadius.full,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     flex: 1,
+    ...Typography.h3,
     textAlign: 'center',
-    fontSize: 16,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
   },
   right: {
     width: 40,
