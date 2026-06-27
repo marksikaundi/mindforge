@@ -1,9 +1,9 @@
-import { SymbolView } from 'expo-symbols';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AppIcon } from '@/components/ui/app-icon';
 import { Button } from '@/components/ui/button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -26,14 +26,14 @@ export default function WelcomeScreen() {
       <SafeAreaView style={styles.safe}>
         <View style={styles.hero}>
           <View style={styles.logoWrap}>
-            <SymbolView
-              name={{ ios: 'brain.head.profile', android: 'psychology', web: 'psychology' }}
+            <AppIcon
+              icon={{ ios: 'brain.head.profile', android: 'psychology', web: 'psychology' }}
               size={64}
               tintColor={Brand.primary}
             />
             <View style={styles.gearOverlay}>
-              <SymbolView
-                name={{ ios: 'gearshape.fill', android: 'settings', web: 'settings' }}
+              <AppIcon
+                icon={{ ios: 'gearshape.fill', android: 'settings', web: 'settings' }}
                 size={28}
                 tintColor={Brand.accent}
               />
@@ -49,8 +49,8 @@ export default function WelcomeScreen() {
             {['Daily Challenges', 'AI-Generated Cases', 'Multiplayer Battles', 'Achievements'].map(
               (feature) => (
                 <View key={feature} style={styles.featureRow}>
-                  <SymbolView
-                    name={{ ios: 'checkmark.circle.fill', android: 'check_circle', web: 'check_circle' }}
+                  <AppIcon
+                    icon={{ ios: 'checkmark.circle.fill', android: 'check_circle', web: 'check_circle' }}
                     size={18}
                     tintColor={Brand.success}
                   />

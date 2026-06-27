@@ -1,7 +1,7 @@
-import { SymbolView } from 'expo-symbols';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AppIcon } from '@/components/ui/app-icon';
 import { ThemedText } from '@/components/themed-text';
 import { Brand } from '@/constants/thinkforge';
 import { Spacing } from '@/constants/theme';
@@ -36,8 +36,8 @@ export function ScreenHeader({
       <View style={styles.left}>
         {showBack && (
           <Pressable onPress={onBackPress} style={styles.iconButton}>
-            <SymbolView
-              name={{ ios: 'chevron.left', android: 'arrow_back', web: 'arrow_back' }}
+            <AppIcon
+              icon={{ ios: 'chevron.left', android: 'arrow_back', web: 'arrow_back' }}
               size={22}
               tintColor={theme.text}
             />
@@ -45,8 +45,8 @@ export function ScreenHeader({
         )}
         {showMenu && (
           <Pressable onPress={onMenuPress} style={styles.iconButton}>
-            <SymbolView
-              name={{ ios: 'line.3.horizontal', android: 'menu', web: 'menu' }}
+            <AppIcon
+              icon={{ ios: 'line.3.horizontal', android: 'menu', web: 'menu' }}
               size={22}
               tintColor={theme.text}
             />
@@ -58,8 +58,8 @@ export function ScreenHeader({
         <ThemedText style={styles.title}>{title}</ThemedText>
       ) : (
         <View style={styles.brandRow}>
-          <SymbolView
-            name={{ ios: 'brain.head.profile', android: 'psychology', web: 'psychology' }}
+          <AppIcon
+            icon={{ ios: 'brain.head.profile', android: 'psychology', web: 'psychology' }}
             size={24}
             tintColor={Brand.primary}
           />
@@ -71,8 +71,8 @@ export function ScreenHeader({
         {rightElement}
         {showNotifications && (
           <Pressable onPress={onNotificationPress} style={styles.iconButton}>
-            <SymbolView
-              name={{ ios: 'bell', android: 'notifications', web: 'notifications' }}
+            <AppIcon
+              icon={{ ios: 'bell', android: 'notifications', web: 'notifications' }}
               size={22}
               tintColor={theme.text}
             />

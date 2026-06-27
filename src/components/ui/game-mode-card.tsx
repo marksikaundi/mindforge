@@ -1,4 +1,3 @@
-import { SymbolView } from 'expo-symbols';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppIcon } from '@/components/ui/app-icon';
@@ -66,8 +65,8 @@ export function GameModeCard({
           )}
         </View>
         {!compact && (
-          <SymbolView
-            name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }}
+          <AppIcon
+            icon={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }}
             size={16}
             tintColor={theme.textSecondary}
           />

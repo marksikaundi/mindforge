@@ -1,7 +1,7 @@
-import { SymbolView } from 'expo-symbols';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { AppIcon } from '@/components/ui/app-icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ProgressBar } from '@/components/ui/progress-bar';
@@ -22,8 +22,8 @@ export default function CaseDetailScreen() {
 
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.imagePlaceholder}>
-          <SymbolView
-            name={{ ios: 'photo', android: 'image', web: 'image' }}
+          <AppIcon
+            icon={{ ios: 'photo', android: 'image', web: 'image' }}
             size={48}
             tintColor={Brand.primary}
           />
@@ -53,8 +53,8 @@ export default function CaseDetailScreen() {
                   styles.clueDot,
                   i < caseData.cluesFound ? styles.clueFound : styles.clueMissing,
                 ]}>
-                <SymbolView
-                  name={{
+                <AppIcon
+                  icon={{
                     ios: i < caseData.cluesFound ? 'magnifyingglass' : 'questionmark',
                     android: i < caseData.cluesFound ? 'search' : 'help',
                     web: i < caseData.cluesFound ? 'search' : 'help',

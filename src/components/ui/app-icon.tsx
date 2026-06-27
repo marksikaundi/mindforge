@@ -15,7 +15,7 @@ type AppIconProps = {
 export function AppIcon({ icon, size = 24, tintColor }: AppIconProps) {
   return (
     <SymbolView
-      name={icon as SymbolViewProps['name']}
+      name={icon as unknown as SymbolViewProps['name']}
       size={size}
       tintColor={tintColor}
     />

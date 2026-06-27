@@ -1,7 +1,7 @@
-import { SymbolView } from 'expo-symbols';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { AppIcon } from '@/components/ui/app-icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScreenHeader } from '@/components/ui/screen-header';
@@ -39,8 +39,8 @@ export default function FeedbackScreen() {
 
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.resultHeader}>
-          <SymbolView
-            name={{
+          <AppIcon
+            icon={{
               ios: isCorrect ? 'checkmark.circle.fill' : 'xmark.circle.fill',
               android: isCorrect ? 'check_circle' : 'cancel',
               web: isCorrect ? 'check_circle' : 'cancel',
@@ -71,8 +71,8 @@ export default function FeedbackScreen() {
 
         {isCorrect && (
           <View style={styles.xpRow}>
-            <SymbolView
-              name={{ ios: 'star.fill', android: 'star', web: 'star' }}
+            <AppIcon
+              icon={{ ios: 'star.fill', android: 'star', web: 'star' }}
               size={24}
               tintColor={Brand.gold}
             />
