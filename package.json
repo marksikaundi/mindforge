@@ -32,11 +32,13 @@
     "typescript": "~6.0.3"
   },
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --clear",
+    "start:tunnel": "expo start --clear --tunnel",
+    "start:localhost": "expo start --clear --localhost",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
+    "android": "expo start --android --localhost --clear",
+    "ios": "expo start --ios --clear",
+    "web": "expo start --web --clear",
     "lint": "expo lint"
   },
   "private": true

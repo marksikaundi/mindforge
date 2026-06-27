@@ -1,10 +1,16 @@
+import 'react-native-gesture-handler';
+
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 
 import { UserProvider } from '@/context/user-context';
 import { Brand } from '@/constants/thinkforge';
+
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 const LightTheme = {
   ...DefaultTheme,
@@ -28,6 +34,10 @@ const DarkThemeCustom = {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+
+  useEffect(() => {
+    SplashScreen.hideAsync().catch(() => {});
+  }, []);
 
   return (
     <UserProvider>
